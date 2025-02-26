@@ -20,6 +20,7 @@ export const register = async ( username:string , email: string, password: strin
 };
 
 
+
 export const logout = () => {
   localStorage.removeItem("token");
 };
