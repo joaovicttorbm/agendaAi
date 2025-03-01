@@ -18,7 +18,7 @@ const PublicRoute = () => {
     return <Loading />;
   }
 
-  return isAuthenticated ? <Navigate to="/" /> : <Outlet />;
+  return isAuthenticated ? <Navigate to="/dashboard" /> : <Outlet />;
 };
 
 const PrivateRoute = () => {
@@ -31,23 +31,24 @@ const PrivateRoute = () => {
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 };
+
 function App() {
+  console.log("App");
   return (
-    <>
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route element={<PublicRoute />}>
-              <Route path="/register" element={<Register />} />
-              <Route path="/login" element={<Login />} />
-            </Route>
-            <Route element={<PrivateRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-            </Route>
-          </Routes>
-        </Router>
-      </AuthProvider>
-    </>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route element={<PublicRoute />}>
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+          </Route>
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
