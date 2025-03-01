@@ -1,6 +1,6 @@
 import api from "./api";
 
-export const getTraining = async () => {
+export const getTraining = async () : Promise<any> => {
   const token = localStorage.getItem("token");
 
   if (!token) {
@@ -15,7 +15,39 @@ export const getTraining = async () => {
   return response.data;
 };
 
-export const saveTreino = async (treino: any) => {
-  const response = await api.post("/treinos", treino);
+export const saveTraining = async (training: any) : Promise<any> => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Usuário não autenticado");
+  }
+  const response = await api.post("/training", training);
+  console.log("response", response);
+  return 
+};
+
+export const getGoals = async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Usuário não autenticado");
+  }
+
+  const response = await api.get("/goal", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
+};
+
+export const saveGoal = async (goal: any) : Promise<any> => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Usuário não autenticado");
+  }
+  const response = await api.post("/goal", goal);
+  console.log("response", response);
+  return 
 };
