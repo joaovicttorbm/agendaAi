@@ -1,38 +1,29 @@
 import { useEffect, useState } from "react";
+import { Box, CssBaseline, Toolbar, Typography, Button } from "@mui/material";
 import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Toolbar,
-  Typography,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { getTraining } from "../services/trainingService";
-import { Event } from "@mui/icons-material";
-import { logout } from "../services/authService";
-
-const drawerWidth = 240;
+  getTraining,
+  getGoals,
+  saveTraining,
+  saveGoal,
+} from "../services/trainingService";
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
+import TrainingList from "../components/TrainingList";
+import GoalsList from "../components/GoalsList";
+import CreateModal from "../components/CreateModal";
 
 const Dashboard = () => {
   const [trainings, setTrainings] = useState<any[]>([]);
+  const [goals, setGoals] = useState<any[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [view, setView] = useState<"trainings" | "goals">("trainings");
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     const fetchTrainings = async () => {
       try {
         const response = await getTraining();
-        console.info(response.data);
+        console.info("Trainings fetched:", response);
         setTrainings(response.data);
       } catch (error) {
         console.error("Erro ao buscar trainings", error);
@@ -45,133 +36,84 @@ const Dashboard = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleLogout = () => {
-    logout();
+  const fetchGoals = async () => {
+    try {
+      const response = await getGoals();
+      console.info("Goals fetched:", response);
+      setGoals(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar goals", error);
+    }
   };
 
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 1 }}>
-        <Event sx={{ fontSize: 40 }} />
-      </Box>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        AgendaAI
-      </Typography>
-      <List>
-        <ListItem disablePadding>
-          <ListItemText primary="Trainings" />
-        </ListItem>
-        <ListItem disablePadding>
-          <IconButton onClick={handleLogout}>
-            <LogoutIcon sx={{ mr: 1 }} />
-          </IconButton>
-          <ListItemText primary="Logout" />
-        </ListItem>
-      </List>
-    </Box>
-  );
+  const handleTrainingClick = () => {
+    setView("trainings");
+  };
+
+  const handleGoalsClick = () => {
+    setView("goals");
+    fetchGoals();
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleSave = async (newItem: any) => {
+    try {
+      if (view === "trainings") {
+        await saveTraining(newItem);
+        setTrainings([...trainings, newItem]);
+      } else {
+        await saveGoal(newItem);
+        setGoals([...goals, newItem]);
+      }
+    } catch (error) {
+      console.error("Erro ao salvar item", error);
+    }
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          {isMobile && (
-            <IconButton
-              color="inherit"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Typography variant="h6" noWrap component="div">
-            Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
-      <Box component="nav">
-        <Drawer
-          variant={isMobile ? "temporary" : "permanent"}
-          open={isMobile ? mobileOpen : true}
-          onClose={handleDrawerToggle}
-          ModalProps={{ keepMounted: true }}
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
-              width: drawerWidth,
-              boxSizing: "border-box",
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-
+      <Header handleDrawerToggle={handleDrawerToggle} />
+      <Sidebar
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
+        onTrainingClick={handleTrainingClick}
+        onGoalsClick={handleGoalsClick}
+      />
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          width: { sm: `calc(100% - 240px)` },
         }}
       >
         <Toolbar />
         <Typography variant="h5" gutterBottom>
-          List Trainings
+          {view === "trainings" ? "List Trainings" : "List Goals"}
         </Typography>
-        <List>
-          {trainings?.length > 0 ? (
-            trainings.map((training) => (
-              <ListItem
-                key={training.trainingId}
-                sx={{
-                  borderBottom: "1px solid #ddd",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                }}
-              >
-                <ListItemText
-                  primary={`Treinamento em ${new Date(
-                    training.date
-                  ).toLocaleString()}`}
-                  secondary={
-                    <>
-                      <Typography variant="body2">
-                        <strong>Técnicas:</strong>{" "}
-                        {training.techniques.join(", ")}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Duração:</strong> {training.durationMinutes}{" "}
-                        minutos
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Intensidade:</strong> {training.intensityLevel}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {training.notes}
-                      </Typography>
-                    </>
-                  }
-                />
-              </ListItem>
-            ))
-          ) : (
-            <Typography variant="body1" sx={{ textAlign: "center", mt: 2 }}>
-              Nenhum treinamento disponível
-            </Typography>
-          )}
-        </List>
+        <Button variant="contained" color="primary" onClick={handleOpenModal}>
+          + Criar
+        </Button>
+        {view === "trainings" ? (
+          <TrainingList trainings={trainings} />
+        ) : (
+          <GoalsList goals={goals} />
+        )}
       </Box>
+      <CreateModal
+        open={openModal}
+        onClose={handleCloseModal}
+        onSave={handleSave}
+        view={view}
+      />
     </Box>
   );
 };
