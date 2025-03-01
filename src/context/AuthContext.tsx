@@ -1,14 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-
 const AuthContext = createContext<any>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // Estado para verificar se a autenticação foi carregada
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log("token", token);
 
     if (token) {
       try {
@@ -32,13 +32,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const login = (token: string) => {
+    console.log("login", token);
     localStorage.setItem("token", token);
     setIsAuthenticated(true);
   };
 
-  const logout = () => {
+  const logout = (navigate: any) => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
+    navigate("/login");
   };
 
   return (

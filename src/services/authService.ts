@@ -21,6 +21,7 @@ export const register = async ( username:string , email: string, password: strin
 
 
 
-export const logout = () => {
+export const logout = (navigate: any) => {
   localStorage.removeItem("token");
+  navigate("/login");
 };
