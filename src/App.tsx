@@ -23,7 +23,6 @@ const PublicRoute = () => {
 
 const PrivateRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
-  console.log(isAuthenticated, "private");
 
   if (isLoading) {
     return <Loading />;
@@ -33,7 +32,6 @@ const PrivateRoute = () => {
 };
 
 function App() {
-  console.log("App");
   return (
     <AuthProvider>
       <Router>

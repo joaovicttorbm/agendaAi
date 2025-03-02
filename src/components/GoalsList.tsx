@@ -12,7 +12,6 @@ interface GoalsListProps {
 }
 
 const GoalsList = ({ goals }: GoalsListProps) => {
-  console.log("GoalsList received goals:", goals); // Adicionando log para depuração
   return (
     <List>
       {goals?.length > 0 ? (
