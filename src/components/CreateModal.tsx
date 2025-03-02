@@ -10,8 +10,51 @@ interface CreateModalProps {
 
 const CreateModal = ({ open, onClose, onSave, view }: CreateModalProps) => {
   const [newItem, setNewItem] = useState<any>({});
+  const [errors, setErrors] = useState<any>({});
+
+  const validateTraining = (item: any) => {
+    const errors: any = {};
+
+    if (!item.date) {
+      errors.date = "Data é obrigatória";
+    }
+
+    if (
+      !Array.isArray(item.techniques) ||
+      item.techniques.length < 1 ||
+      item.techniques.length > 10
+    ) {
+      errors.techniques =
+        "Técnicas devem ser uma lista com pelo menos 1 e no máximo 10 itens";
+    }
+
+    if (
+      !Number.isInteger(Number(item.durationMinutes)) ||
+      item.durationMinutes <= 0 ||
+      item.durationMinutes > 240
+    ) {
+      errors.durationMinutes =
+        "Duração deve ser um número inteiro positivo entre 1 e 240";
+    }
+
+    if (!["low", "medium", "high"].includes(item.intensityLevel)) {
+      errors.intensityLevel =
+        "Nível de intensidade deve ser 'low', 'medium' ou 'high'";
+    }
+
+    if (item.notes && item.notes.length > 500) {
+      errors.notes = "Notas não podem exceder 500 caracteres";
+    }
+
+    return errors;
+  };
 
   const handleSave = () => {
+    const validationErrors = validateTraining(newItem);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
     onSave(newItem);
     onClose();
   };
@@ -29,12 +72,16 @@ const CreateModal = ({ open, onClose, onSave, view }: CreateModalProps) => {
               type="datetime-local"
               fullWidth
               margin="normal"
+              error={!!errors.date}
+              helperText={errors.date}
               onChange={(e) => setNewItem({ ...newItem, date: e.target.value })}
             />
             <TextField
               label="Técnicas"
               fullWidth
               margin="normal"
+              error={!!errors.techniques}
+              helperText={errors.techniques}
               onChange={(e) =>
                 setNewItem({
                   ...newItem,
@@ -47,14 +94,21 @@ const CreateModal = ({ open, onClose, onSave, view }: CreateModalProps) => {
               type="number"
               fullWidth
               margin="normal"
+              error={!!errors.durationMinutes}
+              helperText={errors.durationMinutes}
               onChange={(e) =>
-                setNewItem({ ...newItem, durationMinutes: e.target.value })
+                setNewItem({
+                  ...newItem,
+                  durationMinutes: Number(e.target.value),
+                })
               }
             />
             <TextField
               label="Nível de Intensidade"
               fullWidth
               margin="normal"
+              error={!!errors.intensityLevel}
+              helperText={errors.intensityLevel}
               onChange={(e) =>
                 setNewItem({ ...newItem, intensityLevel: e.target.value })
               }
@@ -63,6 +117,8 @@ const CreateModal = ({ open, onClose, onSave, view }: CreateModalProps) => {
               label="Notas"
               fullWidth
               margin="normal"
+              error={!!errors.notes}
+              helperText={errors.notes}
               onChange={(e) =>
                 setNewItem({ ...newItem, notes: e.target.value })
               }
