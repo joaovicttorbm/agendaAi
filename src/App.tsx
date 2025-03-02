@@ -32,6 +32,7 @@ const PrivateRoute = () => {
 };
 
 function App() {
+  console.log("App render");
   return (
     <AuthProvider>
       <Router>
