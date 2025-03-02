@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://bjj-compass.vercel.app/api/",
+  baseURL: process.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
