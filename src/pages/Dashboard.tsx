@@ -4,7 +4,7 @@ import {
   getTraining,
   getGoals,
   saveTraining,
-  saveGoal,
+  // saveGoal,
 } from "../services/trainingService";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
@@ -69,8 +69,9 @@ const Dashboard = () => {
         await saveTraining(newItem);
         setTrainings([...trainings, newItem]);
       } else {
-        await saveGoal(newItem);
-        setGoals([...goals, newItem]);
+        console.log("newItem , dev");
+        // await saveGoal(newItem);
+        // setGoals([...goals, newItem]);
       }
     } catch (error) {
       console.error("Erro ao salvar item", error);

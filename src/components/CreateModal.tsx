@@ -126,7 +126,8 @@ const CreateModal = ({ open, onClose, onSave, view }: CreateModalProps) => {
           </>
         ) : (
           <>
-            <TextField
+            <>Em desenvolvimento.</>
+            {/* <TextField
               label="Descrição"
               fullWidth
               margin="normal"
@@ -162,7 +163,7 @@ const CreateModal = ({ open, onClose, onSave, view }: CreateModalProps) => {
                   notifications: (e.target as HTMLInputElement).checked,
                 })
               }
-            />
+            /> */}
           </>
         )}
         <Button variant="contained" color="primary" onClick={handleSave}>
