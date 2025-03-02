@@ -53,7 +53,6 @@ const Register: React.FC = () => {
 
   const handleSubmit = async () => {
     if (validate()) {
-      console.log("Form :", formValues);
     }
     try {
       await register(
@@ -67,7 +66,6 @@ const Register: React.FC = () => {
       }, 3000);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        console.log(error);
         if (
           error.response &&
           error.response.data &&

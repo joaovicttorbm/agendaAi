@@ -32,7 +32,6 @@ const Sidebar = ({
   const navigate = useNavigate();
   const { logout } = useAuth();
   const handleLogout = () => {
-    console.log("Logging out");
     logout(navigate);
   };
 

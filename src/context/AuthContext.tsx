@@ -8,8 +8,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log("token", token);
-
     if (token) {
       try {
         const decoded: any = jwtDecode(token); // Decodifica o token
@@ -32,7 +30,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const login = (token: string) => {
-    console.log("login", token);
     localStorage.setItem("token", token);
     setIsAuthenticated(true);
   };

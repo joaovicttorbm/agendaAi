@@ -14,7 +14,6 @@ interface TrainingListProps {
 }
 
 const TrainingList = ({ trainings }: TrainingListProps) => {
-  console.log("trainingsList received trainings:", trainings); // Adicionando log para depuração
   return (
     <List>
       {trainings?.length > 0 ? (
