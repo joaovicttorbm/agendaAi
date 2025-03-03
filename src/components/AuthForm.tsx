@@ -28,6 +28,10 @@ const AuthForm: React.FC<AuthFormProps> = ({
   linkText,
   linkHref,
 }) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSubmit();
+  };
   return (
     <Box
       sx={{ maxWidth: 400, margin: "0 auto", padding: 2, marginTop: "5rem" }}
@@ -38,30 +42,34 @@ const AuthForm: React.FC<AuthFormProps> = ({
       <Typography variant="h4" align="center" gutterBottom>
         {title}
       </Typography>
-      <Grid2 container spacing={2}>
-        {fields.map((field) => (
-          <Grid2 sx={{ width: "100%" }} margin={"auto"} key={field.name}>
-            <TextField
-              label={field.label}
-              type={field.type || "text"}
-              name={field.name}
-              error={!!field.error}
-              helperText={field.error}
-              onChange={(e) => onChange(field.name, e.target.value)}
-              fullWidth
-              margin="normal"
-              slotProps={{
-                input: {
-                  "aria-label": field.label, // Acessibilidade adicional
-                },
-              }}
-            />
-          </Grid2>
-        ))}
-      </Grid2>
-      <Button onClick={onSubmit} variant="contained" fullWidth sx={{ mt: 2 }}>
-        {buttonText}
-      </Button>
+      <form onSubmit={handleSubmit}>
+        <Grid2 container spacing={2}>
+          {fields.map((field) => (
+            <Grid2 sx={{ width: "100%" }} margin={"auto"} key={field.name}>
+              <TextField
+                label={field.label}
+                type={field.type || "text"}
+                name={field.name}
+                error={!!field.error}
+                helperText={field.error}
+                onChange={(e) => onChange(field.name, e.target.value)}
+                fullWidth
+                margin="normal"
+                slotProps={{
+                  input: {
+                    "aria-label": field.label,
+                    autoComplete:
+                      field.name === "password" ? "current-password" : "email",
+                  },
+                }}
+              />
+            </Grid2>
+          ))}
+        </Grid2>
+        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+          {buttonText}
+        </Button>
+      </form>
       <Box mt={2} textAlign="center">
         <Link href={linkHref}>{linkText}</Link>
       </Box>
