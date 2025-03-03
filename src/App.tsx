@@ -1,15 +1,14 @@
 import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
+  createBrowserRouter,
+  RouterProvider,
   Navigate,
   Outlet,
 } from "react-router-dom";
 import Login from "./pages/Login.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
-import { AuthProvider, useAuth } from "./context/AuthContext.tsx";
 import Register from "./pages/Register.tsx";
 import Loading from "./components/Loading.tsx";
+import { AuthProvider, useAuth } from "./context/AuthContext.tsx";
 
 const PublicRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -31,22 +30,35 @@ const PrivateRoute = () => {
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 };
 
+const router = createBrowserRouter(
+  [
+    {
+      element: <PublicRoute />,
+      children: [
+        { path: "/register", element: <Register /> },
+        { path: "/login", element: <Login /> },
+      ],
+    },
+    {
+      element: <PrivateRoute />,
+      children: [
+        { path: "/dashboard", element: <Dashboard /> },
+        { path: "/", element: <Navigate to="/dashboard" /> },
+      ],
+    },
+  ],
+  {
+    future: {
+      v7_relativeSplatPath: true,
+    },
+  }
+);
+
 function App() {
   console.log("App render");
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route element={<PublicRoute />}>
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-          </Route>
-          <Route element={<PrivateRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-          </Route>
-        </Routes>
-      </Router>
+      <RouterProvider router={router} />
     </AuthProvider>
   );
 }

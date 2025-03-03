@@ -32,16 +32,20 @@ const TrainingList = ({ trainings }: TrainingListProps) => {
               ).toLocaleString()}`}
               secondary={
                 <>
-                  <Typography variant="body2">
+                  <Typography variant="body2" component="span">
                     <strong>Técnicas:</strong> {training.techniques.join(", ")}
                   </Typography>
-                  <Typography variant="body2">
+                  <Typography variant="body2" component="span">
                     <strong>Duração:</strong> {training.durationMinutes} minutos
                   </Typography>
-                  <Typography variant="body2">
+                  <Typography variant="body2" component="span">
                     <strong>Intensidade:</strong> {training.intensityLevel}
                   </Typography>
-                  <Typography variant="body2" color="textSecondary">
+                  <Typography
+                    variant="body2"
+                    component="span"
+                    color="textSecondary"
+                  >
                     {training.notes}
                   </Typography>
                 </>
@@ -50,7 +54,11 @@ const TrainingList = ({ trainings }: TrainingListProps) => {
           </ListItem>
         ))
       ) : (
-        <Typography variant="body1" sx={{ textAlign: "center", mt: 2 }}>
+        <Typography
+          variant="body1"
+          component="span"
+          sx={{ textAlign: "center", mt: 2 }}
+        >
           Nenhum treinamento disponível
         </Typography>
       )}
