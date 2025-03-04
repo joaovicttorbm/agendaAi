@@ -4,6 +4,7 @@ import {
   getTraining,
   getGoals,
   saveTraining,
+  updateTraining,
   // saveGoal,
 } from "../services/trainingService";
 import Header from "../components/Header";
@@ -66,12 +67,25 @@ const Dashboard = () => {
   const handleSave = async (newItem: any) => {
     try {
       if (view === "trainings") {
-        await saveTraining(newItem);
-        setTrainings([...trainings, newItem]);
+        if (newItem.trainingId) {
+          const updatedTraining = await updateTraining(
+            newItem.trainingId,
+            newItem
+          );
+          const updatedTrainings = trainings.map((training) =>
+            training.trainingId === updatedTraining.trainingId
+              ? updatedTraining
+              : training
+          );
+          setTrainings(updatedTrainings);
+        } else {
+          const savedTraining = await saveTraining(newItem);
+          setTrainings([...trainings, savedTraining]);
+        }
       } else {
         console.log("newItem , dev");
-        // await saveGoal(newItem);
-        // setGoals([...goals, newItem]);
+        // const savedGoal = await saveGoal(newItem);
+        // setGoals([...goals, savedGoal]);
       }
     } catch (error) {
       console.error("Erro ao salvar item", error);
@@ -104,7 +118,17 @@ const Dashboard = () => {
           + Criar
         </Button>
         {view === "trainings" ? (
-          <TrainingList trainings={trainings} />
+          <TrainingList
+            trainings={trainings}
+            onUpdate={(updatedTraining) => {
+              const updatedTrainings = trainings.map((training) =>
+                training.trainingId === updatedTraining.trainingId
+                  ? updatedTraining
+                  : training
+              );
+              setTrainings(updatedTrainings);
+            }}
+          />
         ) : (
           <GoalsList goals={goals} />
         )}

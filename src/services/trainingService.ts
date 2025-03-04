@@ -26,6 +26,17 @@ export const saveTraining = async (training: any) : Promise<any> => {
   return 
 };
 
+export const updateTraining = async (trainingId: string, training: any): Promise<any> => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Usuário não autenticado");
+  }
+  const response = await api.put(`/training/${trainingId}`, training);
+  console.log("response", response);
+  return response?.data;
+};
+
 export const getGoals = async () => {
   const token = localStorage.getItem("token");
 
