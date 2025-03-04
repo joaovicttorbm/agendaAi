@@ -7,6 +7,8 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import TrainIcon from "@mui/icons-material/Train";
 import StarIcon from "@mui/icons-material/Star";
@@ -31,6 +33,9 @@ const Sidebar = ({
   const drawerWidth = 240;
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const handleLogout = () => {
     logout(navigate);
   };
@@ -80,8 +85,8 @@ const Sidebar = ({
   return (
     <Box component="nav">
       <Drawer
-        variant="temporary"
-        open={mobileOpen}
+        variant={isMobile ? "temporary" : "permanent"}
+        open={isMobile ? mobileOpen : true}
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
         sx={{
