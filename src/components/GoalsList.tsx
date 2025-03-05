@@ -1,4 +1,5 @@
 import { List, ListItem, ListItemText, Typography } from "@mui/material";
+import Loading from "./Loading";
 
 interface Goal {
   description: string;
@@ -44,9 +45,12 @@ const GoalsList = ({ goals }: GoalsListProps) => {
           </ListItem>
         ))
       ) : (
-        <Typography variant="body1" sx={{ textAlign: "center", mt: 2 }}>
-          Nenhum objetivo disponível
-        </Typography>
+        <>
+          <Typography variant="body1" sx={{ textAlign: "center", mt: 2 }}>
+            Em Desenvolvimento .....
+          </Typography>
+          <Loading />
+        </>
       )}
     </List>
   );
