@@ -5,6 +5,7 @@ import {
   getGoals,
   saveTraining,
   updateTraining,
+  deleteTraining,
   // saveGoal,
 } from "../services/trainingService";
 import Header from "../components/Header";
@@ -24,7 +25,6 @@ const Dashboard = () => {
     const fetchTrainings = async () => {
       try {
         const response = await getTraining();
-        console.info("Trainings fetched:", response);
         setTrainings(response.data);
       } catch (error) {
         console.error("Erro ao buscar trainings", error);
@@ -40,7 +40,6 @@ const Dashboard = () => {
   const fetchGoals = async () => {
     try {
       const response = await getGoals();
-      console.info("Goals fetched:", response);
       setGoals(response.data);
     } catch (error) {
       console.error("Erro ao buscar goals", error);
@@ -72,6 +71,7 @@ const Dashboard = () => {
             newItem.trainingId,
             newItem
           );
+
           const updatedTrainings = trainings.map((training) =>
             training.trainingId === updatedTraining.trainingId
               ? updatedTraining
@@ -89,6 +89,18 @@ const Dashboard = () => {
       }
     } catch (error) {
       console.error("Erro ao salvar item", error);
+    }
+  };
+
+  const handleDelete = async (trainingId: string) => {
+    try {
+      await deleteTraining(trainingId);
+      const updatedTrainings = trainings.filter(
+        (training) => training.trainingId !== trainingId
+      );
+      setTrainings(updatedTrainings);
+    } catch (error) {
+      console.error("Erro ao deletar item", error);
     }
   };
 
@@ -120,14 +132,8 @@ const Dashboard = () => {
         {view === "trainings" ? (
           <TrainingList
             trainings={trainings}
-            onUpdate={(updatedTraining) => {
-              const updatedTrainings = trainings.map((training) =>
-                training.trainingId === updatedTraining.trainingId
-                  ? updatedTraining
-                  : training
-              );
-              setTrainings(updatedTrainings);
-            }}
+            onUpdate={handleSave}
+            onDelete={handleDelete}
           />
         ) : (
           <GoalsList goals={goals} />

@@ -4,8 +4,10 @@ import {
   ListItemText,
   Typography,
   IconButton,
+  Box,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import EditTrainingModal from "./EditTrainingModal.tsx";
 
@@ -21,15 +23,20 @@ interface Training {
 interface TrainingListProps {
   trainings: Training[];
   onUpdate: (updatedTraining: Training) => void;
+  onDelete: (trainingId: string) => void;
 }
 
-const TrainingList = ({ trainings, onUpdate }: TrainingListProps) => {
+const TrainingList = ({ trainings, onUpdate, onDelete }: TrainingListProps) => {
   const [selectedTraining, setSelectedTraining] = useState<Training | null>(
     null
   );
 
   const handleEditClick = (training: Training) => {
     setSelectedTraining(training);
+  };
+
+  const handleDeleteClick = (trainingId: string) => {
+    onDelete(trainingId);
   };
 
   const handleCloseModal = () => {
@@ -81,9 +88,16 @@ const TrainingList = ({ trainings, onUpdate }: TrainingListProps) => {
                   </>
                 }
               />
-              <IconButton onClick={() => handleEditClick(training)}>
-                <EditIcon />
-              </IconButton>
+              <Box sx={{ display: "flex", flexDirection: "row" }}>
+                <IconButton onClick={() => handleEditClick(training)}>
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  onClick={() => handleDeleteClick(training.trainingId)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
             </ListItem>
           ))
         ) : (
