@@ -63,32 +63,44 @@ const Dashboard = () => {
     setOpenModal(false);
   };
 
-  const handleSave = async (newItem: any) => {
+  const saveNewTraining = async (newTraining: any) => {
     try {
-      if (view === "trainings") {
-        if (newItem.trainingId) {
-          const updatedTraining = await updateTraining(
-            newItem.trainingId,
-            newItem
-          );
-
-          const updatedTrainings = trainings.map((training) =>
-            training.trainingId === updatedTraining.trainingId
-              ? updatedTraining
-              : training
-          );
-          setTrainings(updatedTrainings);
-        } else {
-          const savedTraining = await saveTraining(newItem);
-          setTrainings([...trainings, savedTraining]);
-        }
-      } else {
-        console.log("newItem , dev");
-        // const savedGoal = await saveGoal(newItem);
-        // setGoals([...goals, savedGoal]);
-      }
+      const savedTraining = await saveTraining(newTraining);
+      setTrainings((prevTrainings) => [...prevTrainings, savedTraining.data]);
     } catch (error) {
-      console.error("Erro ao salvar item", error);
+      console.error("Erro ao salvar novo treino", error);
+    }
+  };
+
+  const updateExistingTraining = async (updatedTraining: any) => {
+    try {
+      const updatedTrainingResponse = await updateTraining(
+        updatedTraining.trainingId,
+        updatedTraining
+      );
+      const updatedTrainings = trainings.map((training) =>
+        training.trainingId === updatedTrainingResponse.data.trainingId
+          ? updatedTrainingResponse.data
+          : training
+      );
+      setTrainings(updatedTrainings);
+      console.log("Treino atualizado:", updatedTrainingResponse);
+    } catch (error) {
+      console.error("Erro ao atualizar treino", error);
+    }
+  };
+
+  const handleSave = async (newItem: any) => {
+    if (view === "trainings") {
+      if (newItem.trainingId) {
+        await updateExistingTraining(newItem);
+      } else {
+        await saveNewTraining(newItem);
+      }
+    } else {
+      console.log("newItem , dev");
+      // const savedGoal = await saveGoal(newItem);
+      // setGoals([...goals, savedGoal]);
     }
   };
 
@@ -100,7 +112,7 @@ const Dashboard = () => {
       );
       setTrainings(updatedTrainings);
     } catch (error) {
-      console.error("Erro ao deletar item", error);
+      console.error("Erro ao deletar treino", error);
     }
   };
 

@@ -9,7 +9,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
-import EditTrainingModal from "./EditTrainingModal.tsx";
+import EditTrainingModal from "./EditTrainingModal";
 
 interface Training {
   trainingId: string;
@@ -69,7 +69,7 @@ const TrainingList = ({ trainings, onUpdate, onDelete }: TrainingListProps) => {
                   <>
                     <Typography variant="body2" component="div">
                       <strong>Techniques:</strong>{" "}
-                      {training.techniques.join(", ")}
+                      {training.techniques?.join(", ") || "N/A"}
                     </Typography>
                     <Typography variant="body2" component="div">
                       <strong>DurationMinutes:</strong>{" "}
