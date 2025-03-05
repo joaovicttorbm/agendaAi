@@ -4,6 +4,8 @@ import {
   getTraining,
   getGoals,
   saveTraining,
+  updateTraining,
+  deleteTraining,
   // saveGoal,
 } from "../services/trainingService";
 import Header from "../components/Header";
@@ -23,7 +25,6 @@ const Dashboard = () => {
     const fetchTrainings = async () => {
       try {
         const response = await getTraining();
-        console.info("Trainings fetched:", response);
         setTrainings(response.data);
       } catch (error) {
         console.error("Erro ao buscar trainings", error);
@@ -39,7 +40,6 @@ const Dashboard = () => {
   const fetchGoals = async () => {
     try {
       const response = await getGoals();
-      console.info("Goals fetched:", response);
       setGoals(response.data);
     } catch (error) {
       console.error("Erro ao buscar goals", error);
@@ -63,18 +63,56 @@ const Dashboard = () => {
     setOpenModal(false);
   };
 
-  const handleSave = async (newItem: any) => {
+  const saveNewTraining = async (newTraining: any) => {
     try {
-      if (view === "trainings") {
-        await saveTraining(newItem);
-        setTrainings([...trainings, newItem]);
-      } else {
-        console.log("newItem , dev");
-        // await saveGoal(newItem);
-        // setGoals([...goals, newItem]);
-      }
+      const savedTraining = await saveTraining(newTraining);
+      setTrainings((prevTrainings) => [...prevTrainings, savedTraining.data]);
     } catch (error) {
-      console.error("Erro ao salvar item", error);
+      console.error("Erro ao salvar novo treino", error);
+    }
+  };
+
+  const updateExistingTraining = async (updatedTraining: any) => {
+    try {
+      const updatedTrainingResponse = await updateTraining(
+        updatedTraining.trainingId,
+        updatedTraining
+      );
+      const updatedTrainings = trainings.map((training) =>
+        training.trainingId === updatedTrainingResponse.data.trainingId
+          ? updatedTrainingResponse.data
+          : training
+      );
+      setTrainings(updatedTrainings);
+      console.log("Treino atualizado:", updatedTrainingResponse);
+    } catch (error) {
+      console.error("Erro ao atualizar treino", error);
+    }
+  };
+
+  const handleSave = async (newItem: any) => {
+    if (view === "trainings") {
+      if (newItem.trainingId) {
+        await updateExistingTraining(newItem);
+      } else {
+        await saveNewTraining(newItem);
+      }
+    } else {
+      console.log("newItem , dev");
+      // const savedGoal = await saveGoal(newItem);
+      // setGoals([...goals, savedGoal]);
+    }
+  };
+
+  const handleDelete = async (trainingId: string) => {
+    try {
+      await deleteTraining(trainingId);
+      const updatedTrainings = trainings.filter(
+        (training) => training.trainingId !== trainingId
+      );
+      setTrainings(updatedTrainings);
+    } catch (error) {
+      console.error("Erro ao deletar treino", error);
     }
   };
 
@@ -104,7 +142,11 @@ const Dashboard = () => {
           + Criar
         </Button>
         {view === "trainings" ? (
-          <TrainingList trainings={trainings} />
+          <TrainingList
+            trainings={trainings}
+            onUpdate={handleSave}
+            onDelete={handleDelete}
+          />
         ) : (
           <GoalsList goals={goals} />
         )}
