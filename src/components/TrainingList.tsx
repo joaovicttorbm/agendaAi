@@ -62,7 +62,7 @@ const TrainingList = ({ trainings, onUpdate, onDelete }: TrainingListProps) => {
               }}
             >
               <ListItemText
-                primary={`Treinamento em ${new Date(
+                primary={`Training  ${new Date(
                   training.date
                 ).toLocaleString()}`}
                 secondary={
