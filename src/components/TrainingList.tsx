@@ -115,7 +115,7 @@ const TrainingList = ({ trainings, onUpdate, onDelete }: TrainingListProps) => {
             component="span"
             sx={{ textAlign: "center", mt: 2 }}
           >
-            Nenhum treinamento disponível
+            Not found training
           </Typography>
         )}
       </List>
