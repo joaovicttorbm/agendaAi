@@ -67,24 +67,33 @@ const TrainingList = ({ trainings, onUpdate, onDelete }: TrainingListProps) => {
                 ).toLocaleString()}`}
                 secondary={
                   <>
-                    <Typography variant="body2" component="div">
-                      <strong>Techniques:</strong>{" "}
-                      {training.techniques?.join(", ") || "N/A"}
-                    </Typography>
-                    <Typography variant="body2" component="div">
-                      <strong>DurationMinutes:</strong>{" "}
-                      {training.durationMinutes} minutes
-                    </Typography>
-                    <Typography variant="body2" component="div">
-                      <strong>IntensityLevel:</strong> {training.intensityLevel}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      component="div"
-                      color="textSecondary"
-                    >
-                      {training.notes}
-                    </Typography>
+                    <Box>
+                      <Typography variant="body2" component="span">
+                        <strong>Techniques:</strong>{" "}
+                        {training.techniques?.join(", ") || "N/A"}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" component="span">
+                        <strong>DurationMinutes:</strong>{" "}
+                        {training.durationMinutes} minutes
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" component="span">
+                        <strong>IntensityLevel:</strong>{" "}
+                        {training.intensityLevel}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography
+                        variant="body2"
+                        component="span"
+                        color="textSecondary"
+                      >
+                        {training.notes}
+                      </Typography>
+                    </Box>
                   </>
                 }
               />

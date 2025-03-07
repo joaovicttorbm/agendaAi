@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemText, Typography } from "@mui/material";
+import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
 import Loading from "./Loading";
 
 interface Goal {
@@ -29,16 +29,22 @@ const GoalsList = ({ goals }: GoalsListProps) => {
               primary={goal.description}
               secondary={
                 <>
-                  <Typography variant="body2">
-                    <strong>Status:</strong> {goal.status}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Progress:</strong> {goal.progress}%
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Notifications:</strong>{" "}
-                    {goal.notifications ? "Enabled" : "Disabled"}
-                  </Typography>
+                  <Box>
+                    <Typography variant="body2" component="span">
+                      <strong>Status:</strong> {goal.status}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" component="span">
+                      <strong>Progress:</strong> {goal.progress}%
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" component="span">
+                      <strong>Notifications:</strong>{" "}
+                      {goal.notifications ? "Enabled" : "Disabled"}
+                    </Typography>
+                  </Box>
                 </>
               }
             />
