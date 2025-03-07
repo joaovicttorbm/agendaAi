@@ -35,7 +35,7 @@ const Header = ({ handleDrawerToggle }: HeaderProps) => {
             <MenuIcon />
           </IconButton>
         )}
-        <Typography variant="h6" noWrap component="div">
+        <Typography variant="h6" noWrap component="span">
           Dashboard
         </Typography>
       </Toolbar>
