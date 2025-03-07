@@ -72,12 +72,14 @@ const Sidebar = ({
           </ListItemIcon>
           <ListItemText primary="Goals" />
         </ListItem>
-        <ListItem disablePadding>
-          <IconButton onClick={handleLogout}>
-            <LogoutIcon sx={{ mr: 1 }} />
-          </IconButton>
-          <ListItemText primary="Logout" />
-        </ListItem>
+        <Box sx={{ marginTop: 10 }}>
+          <ListItem disablePadding>
+            <IconButton onClick={handleLogout}>
+              <LogoutIcon sx={{ mr: 1 }} />
+            </IconButton>
+            <ListItemText primary="Logout" />
+          </ListItem>
+        </Box>
       </List>
     </Box>
   );
