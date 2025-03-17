@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import AuthForm from "../components/AuthForm";
 import { register } from "../services/authService";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,7 @@ const Register: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const validate = () => {
+  const validate = useCallback(() => {
     let valid = true;
     let newErrors = { userName: "", email: "", password: "" };
 
@@ -49,53 +49,51 @@ const Register: React.FC = () => {
 
     setErrors(newErrors);
     return valid;
-  };
+  }, [formValues]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (validate()) {
-    }
-    try {
-      await register(
-        formValues.userName,
-        formValues.email,
-        formValues.password
-      );
-
-      setTimeout(() => {
+      try {
+        await register(
+          formValues.userName,
+          formValues.email,
+          formValues.password
+        );
         navigate("/login");
-      }, 3000);
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message === "User already exists with this email"
-        ) {
-          setErrors((prev) => ({
-            ...prev,
-            email:
-              "This email is already registered. Please use a different email.",
-          }));
+      } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.message ===
+              "User already exists with this email"
+          ) {
+            setErrors((prev) => ({
+              ...prev,
+              email:
+                "This email is already registered. Please use a different email.",
+            }));
+          } else {
+            setErrors((prev) => ({
+              ...prev,
+              password: "Register failed. Please check your credentials.",
+            }));
+          }
         } else {
+          console.error("Unknown error:", error);
           setErrors((prev) => ({
             ...prev,
-            password: "Register failed. Please check your credentials.",
+            password: "An unexpected error occurred. Please try again later.",
           }));
         }
-      } else {
-        console.error("Unknown error:", error);
-        setErrors((prev) => ({
-          ...prev,
-          password: "An unexpected error occurred. Please try again later.",
-        }));
       }
     }
-  };
+  }, [formValues, validate, navigate]);
 
-  const handleChange = (name: string, value: string) => {
+  const handleChange = useCallback((name: string, value: string) => {
     setFormValues((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" })); // Remove erro ao digitar
-  };
+  }, []);
 
   return (
     <AuthForm
@@ -104,7 +102,7 @@ const Register: React.FC = () => {
         { label: "Username", name: "userName", error: errors.userName },
         { label: "E-mail", name: "email", type: "email", error: errors.email },
         {
-          label: "password",
+          label: "Password",
           name: "password",
           type: "password",
           error: errors.password,
