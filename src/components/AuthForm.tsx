@@ -8,6 +8,7 @@ import {
   Grid2,
   IconButton,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import React, { useState } from "react";
 
@@ -26,6 +27,7 @@ interface AuthFormProps {
   onChange: (name: string, value: string) => void;
   linkText: string;
   linkHref: string;
+  loading?: boolean;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({
@@ -36,6 +38,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
   onChange,
   linkText,
   linkHref,
+  loading = false,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -99,8 +102,14 @@ const AuthForm: React.FC<AuthFormProps> = ({
             </Grid2>
           ))}
         </Grid2>
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
-          {buttonText}
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          sx={{ mt: 2 }}
+          disabled={loading}
+        >
+          {loading ? <CircularProgress size={24} /> : buttonText}
         </Button>
       </form>
       <Box mt={2} textAlign="center">

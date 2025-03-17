@@ -10,6 +10,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login: authLogin } = useAuth();
 
@@ -36,7 +37,9 @@ const Login = () => {
       return;
     }
 
+    setLoading(true);
     try {
+      await new Promise((resolve) => setTimeout(resolve, 50));
       const userData = await login(email, password);
       authLogin(userData);
       navigate("/dashboard");
@@ -46,6 +49,8 @@ const Login = () => {
         password: "Login failed. Please check your credentials.",
       }));
       console.error("Error login", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -55,7 +60,7 @@ const Login = () => {
       fields={[
         { label: "Email", name: "email", error: errors.email },
         {
-          label: "password",
+          label: "Password",
           name: "password",
           type: "password",
           error: errors.password,
@@ -68,6 +73,7 @@ const Login = () => {
       }}
       linkText="Don't have an account? Create account"
       linkHref="/register"
+      loading={loading}
     />
   );
 };
