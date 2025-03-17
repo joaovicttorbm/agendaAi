@@ -37,9 +37,14 @@ const AuthForm: React.FC<AuthFormProps> = ({
       sx={{ maxWidth: 400, margin: "0 auto", padding: 2, marginTop: "5rem" }}
     >
       <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 2 }}>
-        <Event sx={{ fontSize: 50 }} /> {/* Ícone de Agenda */}
+        <Event sx={{ fontSize: 50, color: "blue" }} /> {/* Ícone de Agenda */}
       </Box>
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        sx={{ color: "black" }}
+      >
         {title}
       </Typography>
       <form onSubmit={handleSubmit}>
