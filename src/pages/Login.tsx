@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { login } from "../services/authService.ts";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.tsx";
@@ -14,7 +14,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { login: authLogin } = useAuth();
 
-  const validateCredentials = (email: string, password: string) => {
+  const validateCredentials = useCallback((email: string, password: string) => {
     const errors = { email: "", password: "" };
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -26,9 +26,9 @@ const Login = () => {
     }
 
     return errors;
-  };
+  }, []);
 
-  const handleLogin = async () => {
+  const handleLogin = useCallback(async () => {
     const { email, password } = credentials;
     const validationErrors = validateCredentials(email, password);
 
@@ -39,7 +39,6 @@ const Login = () => {
 
     setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 50));
       const userData = await login(email, password);
       authLogin(userData);
       navigate("/dashboard");
@@ -52,7 +51,11 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [credentials, validateCredentials, authLogin, navigate]);
+
+  const handleChange = useCallback((name: string, value: any) => {
+    setCredentials((prev) => ({ ...prev, [name]: value }));
+  }, []);
 
   return (
     <AuthForm
@@ -68,9 +71,7 @@ const Login = () => {
       ]}
       buttonText="Access account"
       onSubmit={handleLogin}
-      onChange={(name: string, value: any) => {
-        setCredentials((prev) => ({ ...prev, [name]: value }));
-      }}
+      onChange={handleChange}
       linkText="Don't have an account? Create account"
       linkHref="/register"
       loading={loading}
