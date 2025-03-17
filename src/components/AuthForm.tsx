@@ -1,6 +1,15 @@
-import { Event } from "@mui/icons-material";
-import { Box, Button, Link, TextField, Typography, Grid2 } from "@mui/material";
-import React from "react";
+import { Event, Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Link,
+  TextField,
+  Typography,
+  Grid2,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
+import React, { useState } from "react";
 
 interface AuthField {
   label: string;
@@ -28,6 +37,8 @@ const AuthForm: React.FC<AuthFormProps> = ({
   linkText,
   linkHref,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit();
@@ -53,7 +64,11 @@ const AuthForm: React.FC<AuthFormProps> = ({
             <Grid2 sx={{ width: "100%" }} margin={"auto"} key={field.name}>
               <TextField
                 label={field.label}
-                type={field.type || "text"}
+                type={
+                  field.name === "password" && showPassword
+                    ? "text"
+                    : field.type || "text"
+                }
                 name={field.name}
                 error={!!field.error}
                 helperText={field.error}
@@ -65,7 +80,20 @@ const AuthForm: React.FC<AuthFormProps> = ({
                     "aria-label": field.label,
                     autoComplete:
                       field.name === "password" ? "current-password" : "email",
-                  },
+
+                    ...(field.type === "password" && {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }),
+                  } as any,
                 }}
               />
             </Grid2>
