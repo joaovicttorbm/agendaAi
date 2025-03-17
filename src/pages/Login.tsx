@@ -65,13 +65,6 @@ const Login = () => {
       onSubmit={handleLogin}
       onChange={(name: string, value: any) => {
         setCredentials((prev) => ({ ...prev, [name]: value }));
-        setErrors((prev) => ({
-          ...prev,
-          ...validateCredentials(
-            name === "email" ? value : credentials.email,
-            name === "password" ? value : credentials.password
-          ),
-        }));
       }}
       linkText="Don't have an account? Create account"
       linkHref="/register"
