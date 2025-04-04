@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import Register from "./pages/Register.tsx";
 import Loading from "./components/Loading.tsx";
 import { AuthProvider, useAuth } from "./context/AuthContext.tsx";
+import Presentation from "./pages/Presentation.tsx";
 
 const PublicRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -35,6 +36,7 @@ const router = createBrowserRouter(
     {
       element: <PublicRoute />,
       children: [
+        { path: "/", element: <Presentation /> },
         { path: "/register", element: <Register /> },
         { path: "/login", element: <Login /> },
       ],
